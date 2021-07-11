@@ -1,0 +1,74 @@
+CREATE TABLE categories(
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE plants(
+	id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    latin_name VARCHAR(100),
+    description VARCHAR(255),
+    requirements VARCHAR(255),
+    animal_safety_profile VARCHAR(255),
+    care VARCHAR(255),
+    watering VARCHAR(255),
+    placement VARCHAR(255),
+    category_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+CREATE TABLE plant_images(
+	id INT NOT NULL AUTO_INCREMENT,
+    url VARCHAR(255),
+    plant_id INT NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY (plant_id) REFERENCES plants(id)
+);
+
+CREATE TABLE user_types(
+	id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL UNIQUE,
+    description VARCHAR(255),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE users(
+	id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    user_type_id INT NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY (user_type_id) REFERENCES user_types(id)
+);
+
+CREATE TABLE gardens(
+	id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    user_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE favorites(
+	id INT NOT NULL AUTO_INCREMENT,
+    plant_id INT NOT NULL,
+    user_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (plant_id) REFERENCES plants(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE user_plants(
+	id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    plant_id INT NOT NULL,
+    garden_id INT NOT NULL,
+    custom_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(plant_id) REFERENCES plants(id),
+    FOREIGN KEY(garden_id) REFERENCES gardens(id)
+)
