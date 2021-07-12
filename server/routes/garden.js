@@ -47,6 +47,49 @@ router.post('/create', verifyToken, validateCreate, async (req, res) => {
 
 })
 
+router.put('/edit/:id', verifyToken, validateCreate, async (req, res) => {
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array() });
+    }
+
+    const token = req.header('auth-token')
+    const userId = jwt.decode(token).id
+    const id = req.params.id;
+
+    const garden = await Garden.findOne({where: {id, user_id: userId}});
+
+    const gardenPrev = garden.toJSON();
+
+    if(garden){
+        await garden.update({
+            name: req.body.name
+        })
+        .then(res.status(200).send({success: true, message: "Updated successfully", data: garden, dataBefore: gardenPrev}))
+        .catch((error) => {res.status(400).send({success: false, message: "Error while updating record", data: error})})
+    } else{
+        res.status(404).send({success: false, message: "Garden not found"})
+    }
+})
+
+router.delete('/delete/:id', verifyToken, async (req, res) => {
+
+    const token = req.header('auth-token')
+    const userId = jwt.decode(token).id
+    const id = req.params.id;
+
+    const garden = await Garden.findOne({where: {id, user_id: userId}})
+
+    if(garden){
+        garden.destroy()
+            .then(res.status(200).send({success: true, message: "Garden has been deleted successfully"}))
+            .catch(error => res.status(400).send({success: false, message: "Error while deleting", data: error}));
+    } else{
+        res.status(404).send({success: false, message: "Garden not found"})
+    }
+})
+
 router.get('/all', verifyToken, async (req, res) => {
 
     const token = req.header('auth-token');

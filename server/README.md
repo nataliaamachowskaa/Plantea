@@ -153,3 +153,71 @@ The code may return following results:
     }
 }
 ```
+
+### Updating Garden
+
+To update garden you need to use path of `/api/garden/edit/:id` where `:id` is garden's id we want to update. To do that you have to use `PUT` request type while fetching a request. You need to use `auth-token` header to make that request. Example of code:
+
+```javascript
+const result = await fetch(url + '/api/garden/edit/10', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiai5rb3dhbHNraUB5YWhvby5jb20iLCJ1c2VyVHlwZSI6MiwiaWF0IjoxNjI2MDM1OTU5fQ.2of-darT2Tkpfv872pudY9qNfTgTiMq_k1iB1mnoWQk'
+                },
+                body: JSON.stringify({
+                    name: "Updated Garden"
+                })
+            })
+            .then(response => response.json())
+            .then(result => console.log(result))
+```
+May return: 
+```json
+{
+    "success": true,
+    "message": "Updated successfully",
+    "data": {
+        "id": 10,
+        "name": "Updated Garden",
+        "user_id": 45
+    },
+    "dataBefore": {
+        "id": 10,
+        "name": "My Garden",
+        "user_id": 45
+    }
+}
+```
+
+### Deleting garden
+
+To delete garden you need to use path of `/api/garden/delete/:id` where `:id` is garden's id we want to deelte. To do that you have to use `DELETE` request type while fetching a request. You need to use `auth-token` header to make that request. Example of code:
+
+```javascript
+const result = await fetch(url + '/api/garden/delete/10', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiai5rb3dhbHNraUB5YWhvby5jb20iLCJ1c2VyVHlwZSI6MiwiaWF0IjoxNjI2MDM1OTU5fQ.2of-darT2Tkpfv872pudY9qNfTgTiMq_k1iB1mnoWQk'
+                }
+            })
+            .then(response => response.json())
+            .then(result => console.log(result))
+```
+May return: 
+```json
+{
+    "success": true,
+    "message": "Garden has been deleted successfully"
+}
+```
+
+## Category section
+
+Functions in this section are available for admins only. Remember that you have to include header called `auth-token` to every request that you make. You are familiar with making requests now. So the only thing you need to now are paths and request type:
+
+* `/api/category/create` - `POST` - create new category
+* `/api/category/edit/:id` - `POST` - edit category with `id`
+* `/api/category/delete/:id` - `POST` - delete category with `id`
+* `/api/category/all` - `POST` - display all categories - can be filtered by query param called `name`

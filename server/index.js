@@ -10,13 +10,15 @@ const app = express();
 
 // Initialised routes
 const authRoutes = require('./routes/auth');
-const gardenRoutes = require('./routes/garden')
+const gardenRoutes = require('./routes/garden');
+const categoryRoutes = require('./routes/category');
 
 // Middlewares
 const verifyToken = require('./routes/verifyToken');
 app.use(express.json());
 app.use('/api/user', authRoutes);
 app.use('/api/garden', gardenRoutes);
+app.use('/api/category', categoryRoutes);
 
 
 
