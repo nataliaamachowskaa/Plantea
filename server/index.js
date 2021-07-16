@@ -1,5 +1,7 @@
 // Initiating express framework for backend service to handle routes.
 const express = require('express');
+// Initiating mysql for handling mysql database.
+const mysql = require('mysql');
 
 const jwt = require('jsonwebtoken');
 
@@ -12,18 +14,21 @@ const app = express();
 const authRoutes = require('./routes/auth');
 const gardenRoutes = require('./routes/garden');
 const categoryRoutes = require('./routes/category');
+const plantRoutes = require('./routes/plant');
 
 // Middlewares
 const verifyToken = require('./routes/verifyToken');
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use('/api/user', authRoutes);
 app.use('/api/garden', gardenRoutes);
 app.use('/api/category', categoryRoutes);
+app.use('/api/plant', plantRoutes);
 
 
 
 // Initiating variables
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 
 
 
@@ -36,8 +41,7 @@ app.get('/api/user/profile', verifyToken, (req, res) => {
 })
 
 
-// Initiating mysql for handling mysql database.
-const mysql = require('mysql');
+
 
 // Creates connection
 const db = require('./utilities/dbConnection');
@@ -48,8 +52,7 @@ db.connect((err) => {
     if(err) {
         return console.log("ERROR: " + err.sqlMessage);
     } else {
-        console.log("Connected to database");
-
+        console.log("Connected to database");    
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`)
         })

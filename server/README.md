@@ -217,7 +217,24 @@ May return:
 
 Functions in this section are available for admins only. Remember that you have to include header called `auth-token` to every request that you make. You are familiar with making requests now. So the only thing you need to now are paths and request type:
 
-* `/api/category/create` - `POST` - create new category
-* `/api/category/edit/:id` - `POST` - edit category with `id`
-* `/api/category/delete/:id` - `POST` - delete category with `id`
-* `/api/category/all` - `POST` - display all categories - can be filtered by query param called `name`
+* `/api/category/create` - `POST` (Accepts `body` object with `name` property) -  create new category
+* `/api/category/edit/:id` - `PUT` (Accepts `body` object with `name` property) - edit category with `id`
+* `/api/category/delete/:id` - `DELETE` - delete category with `id`
+* `/api/category/all` - `GET` - display all categories - can be filtered by query param called `name`
+
+## Plants section
+
+Functions in this section are available for admins only. Remember that you have to include header called `auth-token` to every request that you make. To send request to that section you must use `enctype ='multipart/form-data'`.
+
+Fields that this request accepts:
+* `name` - required field with maximum of 100 characters
+* `latinName` - required field with maximum of 100 characters
+* `description` - optional field with maximum of 1500 characters
+* `requirements` - optional field with maximum of 1500 characters
+* `animalSafetyProfile` - optional field with maximum of 1500 characters
+* `care` - optional field with maximum of 1500 characters
+* `watering` - optional field with maximum of 1500 characters
+* `placement` - optional field with maximum of 1500 characters
+* `categoryId` - required field. Must be numeric - it leads to specific category.
+* `pictures` - optional field. You can upload maximum of 5 pictures.
+

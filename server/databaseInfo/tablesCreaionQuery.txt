@@ -1,3 +1,7 @@
+CREATE DATABASE plantea;
+
+USE plantea;
+
 CREATE TABLE categories(
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
@@ -7,13 +11,13 @@ CREATE TABLE categories(
 CREATE TABLE plants(
 	id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
-    latin_name VARCHAR(100),
-    description VARCHAR(255),
-    requirements VARCHAR(255),
-    animal_safety_profile VARCHAR(255),
-    care VARCHAR(255),
-    watering VARCHAR(255),
-    placement VARCHAR(255),
+    latin_name TEXT,
+    description TEXT,
+    requirements TEXT,
+    animal_safety_profile TEXT,
+    care TEXT,
+    watering TEXT,
+    placement TEXT,
     category_id INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (category_id) REFERENCES categories(id)
@@ -72,3 +76,10 @@ CREATE TABLE user_plants(
     FOREIGN KEY(plant_id) REFERENCES plants(id),
     FOREIGN KEY(garden_id) REFERENCES gardens(id)
 )
+
+INSERT INTO user_types 
+    (name, description)
+VALUES 
+    ('Admin', 'Admin user type - can do everything'),
+    ('User', 'Normal user type - is being blocked after 7 days of free trial'),
+    ('Premium', 'Premium user type which has access to all features');

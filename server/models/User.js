@@ -19,7 +19,7 @@ const User = sequelize.define("user",{
 });
 
 User.belongsTo(UserType, {
-    foreignKey: 'id',
+    foreignKey: 'id'
 });
 
 module.exports = sequelize.model("user");
