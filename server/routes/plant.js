@@ -31,7 +31,8 @@ const storage = multer.diskStorage({
                 ext = 'bmp';
                 break;
         }
-        cb(null, `${file.fieldname}-${Date.now()}.${ext}`)
+        console.log(file);
+        cb(null, `${file.fieldname}-${Date.now()}${file.originalname.substring(0,4)}.${ext}`)
     },
 });
 
@@ -57,6 +58,7 @@ const db = require('../utilities/dbConnection');
 
 const Plant = require('../models/Plant');
 const PlantImage = require('../models/PlantImage')
+const Category = require('../models/Category')
 
 const validate = [
     check("name").isLength({min: 1, max: 100}).withMessage("The name is empty or too long. Maximum length of name is 100"),
@@ -229,7 +231,7 @@ router.put('/edit/:id', verifyToken, async (req, res) => {
                     plant_id: id
                 }})
                 const imgsBefore = plantImgs;
-                
+                if(req.files.length > 0){
                 if(plantImgs){
                     deleteImages(plantImgs);
                     await PlantImage.destroy({where: {plant_id: id}})
@@ -257,7 +259,7 @@ router.put('/edit/:id', verifyToken, async (req, res) => {
                     }
 
                 }
-
+            }
                 const plantImages = await PlantImage.findAll({where:{plant_id: id}})
 
                 const plantBefore = {
@@ -300,6 +302,113 @@ router.put('/edit/:id', verifyToken, async (req, res) => {
             res.status(403).send({success: false, message: "Access denied - You don't have permission to do that"})
         }
     })
+})
+
+router.delete('/delete/:id', verifyToken, async (req, res) => {
+    
+    const token = req.header('auth-token');
+    const user = jwt.decode(token);
+    const id = req.params.id;
+
+    if(user.userType === 1) {
+
+        const plant = await Plant.findOne({where: {
+            id
+        }})
+
+        if(plant){
+
+            const plantImages = await PlantImage.findAll({where: {
+                plant_id: id
+            }})
+
+            await PlantImage.destroy({where: {
+                plant_id: id
+            }}).then(async () => {
+                if(plantImages){
+                    deleteImages(plantImages)
+                    await plant.destroy();
+                }
+            }).then(res.status(200).send({success: true, message: "Plant has been successfully removed", data: plant})).catch(error => res.status(400).send({success: false, message: "Error while deleting", error,  data: plant}))
+            
+        }else{
+            res.status(404).send({success: false, message: `Plant with id: ${id} not found`})
+        }
+
+    }else{
+        res.status(403).send({success: false, message: "Access denied - You don't have permission to do that"})
+    }
+})
+
+// for all users
+
+router.get('/all', verifyToken, async (req, res) => {
+    
+    const searchQuery = req.query.keyword
+    const name = req.query.name;
+    const latinName = req.query.latinName;
+    const category = req.query.category;
+
+    let data = [];
+
+    let plants = `SELECT *, plants.name AS 'name', plants.id AS 'id', categories.name as 'cName' FROM plants JOIN categories ON plants.category_id=categories.id JOIN plant_images ON plant_images.plant_id=plants.id`;
+
+    if(searchQuery){
+        plants = `SELECT *, plants.name AS 'name', plants.id AS 'id', categories.name as 'cName' FROM plants JOIN categories ON plants.category_id=categories.id JOIN plant_images ON plant_images.plant_id=plants.id WHERE categories.name LIKE '%${searchQuery}%' OR plants.latin_name LIKE '%${searchQuery}%' OR plants.name LIKE '%${searchQuery}%'`;
+    }
+
+    if(name){
+        plants = `SELECT *, plants.name AS 'name', plants.id AS 'id', categories.name as 'cName' FROM plants JOIN categories ON plants.category_id=categories.id JOIN plant_images ON plant_images.plant_id=plants.id WHERE plants.name LIKE '%${name}%'`;
+    };
+
+    if(latinName){
+        plants = `SELECT *, plants.name AS 'name', plants.id AS 'id', categories.name as 'cName' FROM plants JOIN categories ON plants.category_id=categories.id JOIN plant_images ON plant_images.plant_id=plants.id WHERE plants.latin_name LIKE '%${latinName}%'`;
+    }
+
+    if(category){
+        plants = `SELECT *, plants.name AS 'name', plants.id AS 'id', categories.name as 'cName' FROM plants JOIN categories ON plants.category_id=categories.id JOIN plant_images ON plant_images.plant_id=plants.id WHERE categories.name LIKE '%${category}%'`;
+    }
+
+    if(name && category && latinName){
+        plants = `SELECT *, plants.name AS 'name', plants.id AS 'id', categories.name as 'cName' FROM plants JOIN categories ON plants.category_id=categories.id JOIN plant_images ON plant_images.plant_id=plants.id WHERE categories.name LIKE '%${category}%' OR plants.latin_name LIKE '%${latinName}%' OR plants.name LIKE '%${name}%'`;
+    }
+    
+    const result = db.query(plants, async (error, rows) => {
+        if(error) return res.status(400).send({success: false, message: error});
+
+        if(rows.length > 0){
+
+            for(let i = 0; i < rows.length; i++){
+                console.log(await Category.findOne({where: {id: rows[i].category_id}}).then(result => result.toJSON()));
+            };
+
+            for(let i = 0; i < rows.length; i++){
+                data.push({
+                    id: rows[i].id,
+                    name: rows[i].name,
+                    latinName: rows[i].latin_name,
+                    description: rows[i].description,
+                    requirements: rows[i].requirements,
+                    animalSafetyProfile: rows[i].animal_safety_profile,
+                    care: rows[i].care,
+                    watering: rows[i].watering,
+                    placement: rows[i].placement,
+                    category: await Category.findOne({where: {id: rows[i].category_id}}).then(result => result.toJSON()),
+                    images: await PlantImage.findAll({where: {plant_id: rows[i].id}})
+                })
+            };
+
+            
+
+            res.status(200).send({success: true, data})
+        }else{
+            res.status(404).send({success: false, message:"No data found"})
+        }
+
+        
+    })
+
+    
 })
 
 module.exports = router

@@ -23,8 +23,8 @@ const Plant = sequelize.define("plants", {
     }
 })
 
-Plant.belongsTo(Category, {
-    foreignKey: 'id'
-})
+Category.hasMany(Plant);
+Plant.belongsTo(Category);
+
 
 module.exports = sequelize.model("plants");

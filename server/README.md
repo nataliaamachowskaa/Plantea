@@ -1,5 +1,15 @@
 # SERVER BACK END DOCUMENTATION
 
+## Users wit admin permissions
+
+`email` and `password`
+
+* lukasz.lopata@gmail.com
+* gosia.kolarska@gmail.com
+* natalia.machowska@gmail.com
+* wojciech.kolarski@gmail.com
+* paulina.maszkowska@gmail.com
+
 ## Registering new user
 
 To trigger registering user yo should use `/api/user/register` path with the method `POST`. The following code will send a request to the server and will try to create new user in the database. Users registered this way will be regular users.
@@ -238,3 +248,16 @@ Fields that this request accepts:
 * `categoryId` - required field. Must be numeric - it leads to specific category.
 * `pictures` - optional field. You can upload maximum of 5 pictures.
 
+Paths:
+* Creating - `/api/plant/create` with `POST`
+* Editing - `/api/plant/edit/:id` with `PUT` and `id` parameter
+* Deleting - `/api/plant/delete/:id` with `DELETE` and `id` parameter
+
+This path does is accessible for all users:
+`/api/plant/all`
+
+It will return all plants which are available in database. It accepts following query parameters:
+* `keyword` - finds all plants which contains in their `name`, `latinName` or `category` provided string,
+* `name` - finds all plants which conatin in their `name` provided string
+* `latinName` - finds all plants which conatin in their `latinName` provided string
+* `category` - finds all plants which conatin in their `category` provided string
