@@ -15,6 +15,8 @@ const authRoutes = require('./routes/auth');
 const gardenRoutes = require('./routes/garden');
 const categoryRoutes = require('./routes/category');
 const plantRoutes = require('./routes/plant');
+const favoriteRoutes = require('./routes/favorite');
+const userPlantRoutes = require('./routes/userPlants');
 
 // Middlewares
 const verifyToken = require('./routes/verifyToken');
@@ -24,6 +26,8 @@ app.use('/api/user', authRoutes);
 app.use('/api/garden', gardenRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/plant', plantRoutes);
+app.use('/api/favorite', favoriteRoutes);
+app.use('/api/user/plant', userPlantRoutes)
 
 
 

@@ -4,11 +4,11 @@
 
 `email` and `password`
 
-* lukasz.lopata@gmail.com
-* gosia.kolarska@gmail.com
-* natalia.machowska@gmail.com
-* wojciech.kolarski@gmail.com
-* paulina.maszkowska@gmail.com
+* lukasz.lopata@gmail.com - Password123!
+* gosia.kolarska@gmail.com - Password123!
+* natalia.machowska@gmail.com - Password123!
+* wojciech.kolarski@gmail.com - Password123!
+* paulina.maszkowska@gmail.com - Password123!
 
 ## Registering new user
 
@@ -253,7 +253,7 @@ Paths:
 * Editing - `/api/plant/edit/:id` with `PUT` and `id` parameter
 * Deleting - `/api/plant/delete/:id` with `DELETE` and `id` parameter
 
-This path does is accessible for all users:
+This path is accessible for all users:
 `/api/plant/all`
 
 It will return all plants which are available in database. It accepts following query parameters:
@@ -261,3 +261,85 @@ It will return all plants which are available in database. It accepts following 
 * `name` - finds all plants which conatin in their `name` provided string
 * `latinName` - finds all plants which conatin in their `latinName` provided string
 * `category` - finds all plants which conatin in their `category` provided string
+
+
+## Favorites scection
+
+### Adding plant to favorites
+
+To add plant to favorites you should use path `/api/favorite/add/:id` where `id` is the id of the plant. Remember to use `auth-token` header.
+
+### Removing plant from favorites
+
+To remove plant from favorites you should use path `/api/favorite/delete/:id` where `id` is the id of the plant. Remember to use `auth-token` header.
+
+### Display all favorites plants
+
+To display all plants which are in favorites you should use path `api/favorites/all`. Remember to use `auth-token` header.
+
+## User's plants section.
+
+To add plant to garden you should use path `/api/user/plant/create` where you should provide `name`, `gardenId`, `plantId` fields in your request.
+
+example json file with request:
+```json
+{
+    "name": "Name",
+    "gardenId": 1,
+    "plantId": 16
+}
+```
+
+may return: 
+
+```json
+{
+    "success": true,
+    "data": {
+        "id": 2,
+        "name": "Name",
+        "user": {
+            "id": 43,
+            "email": "lukasz.lopata96@gmail.com",
+            "userType": 1,
+            "iat": 1626012131
+        },
+        "plant": {
+            "id": 16,
+            "name": "lodyga",
+            "latin_name": "Flowersee",
+            "description": "A rose is a woody perennial flowering plant of the genus Rosa, in the family Rosaceae, or the flower it bears. There are over three hundred species and tens of thousands. A rose is a woody perennial flowering plant of the genus Rosa, in the family Rosacea",
+            "requirements": "",
+            "animal_safety_profile": "",
+            "care": "",
+            "watering": "",
+            "placement": "",
+            "category_id": 1
+        },
+        "garden": {
+            "id": 1,
+            "name": "Garden number 1",
+            "user_id": 43
+        }
+    }
+}
+```
+
+### Removing plant from garden
+
+To remove plant from garden you need to use path `api/user/plant/remove/:id` where `id` is user's plant index.
+
+may return:
+```json
+{
+    "success": true,
+    "message": "Plant has been successfully removed",
+    "data": {
+        "id": 6,
+        "user_id": 43,
+        "plant_id": 16,
+        "garden_id": 2,
+        "custom_name": "Name of flower"
+    }
+}
+```

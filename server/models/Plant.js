@@ -19,12 +19,8 @@ const Plant = sequelize.define("plants", {
     placement: DataTypes.TEXT,
     category_id: {
         type: DataTypes.INTEGER,
-        foreignKey: true
     }
 })
-
-Category.hasMany(Plant);
-Plant.belongsTo(Category);
 
 
 module.exports = sequelize.model("plants");
