@@ -10,23 +10,22 @@
     <div id="result">
 
     </div>
+    <input type="text" id="date" /> <br />
     <button id="button">Click to fetch</button>
     <script>
 
         let btn = document.querySelector('#button');
         let resultField = document.querySelector('#result')
+        let dateInput = document.querySelector('#date');
 
         btn.addEventListener('click', async () => {
-            const result = await fetch('http://localhost:3000/api/user/profile', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDMsImVtYWlsIjoibHVrYXN6LmxvcGF0YTk2QGdtYWlsLmNvbSIsInVZXJUeXBlIjoxLCJpYXQiOjE2MjYwMTIxMzF9.EBqAfoPk4u7-s-aZXaSoPGzlCPsiqgzrRx4VxSkGh28'
-                },
-            })
-            .then(response => response.json())
-            .then(result => console.log(result))
-            .catch(err => console.log(err))
+            expDate = new Date(dateInput.value);
+            date = new Date();
+            expired = false;
+            if(expDate < date)
+                expired = true;
+            
+            resultField.innerHTML = (expired) ? "Your acount is expired" : "Your account is still active";
         })
         
     </script>
