@@ -9,6 +9,7 @@ require('dotenv').config();
 const secretKey = process.env.JWT_SECRET_KEY;
 const router = express.Router();
 const db = require('../utilities/dbConnection');
+const checkDateIfExpired = require('../utilities/checkIfExpired');
 
 const User = require('../models/User');
 const Plant = require('../models/Plant');
@@ -31,6 +32,8 @@ router.post('/create', verifyToken, validate, async(req, res) => {
 
     const token = req.header('auth-token');
     const user = jwt.decode(token);
+
+    if(checkDateIfExpired(user.expireDate)) return res.status(400).send({success: false, message: "Your account is expired. Buy subscription to continue"});
 
     const userPlant = UserPlant.build({
         user_id: user.id,
@@ -72,6 +75,38 @@ router.delete('/remove/:id', verifyToken, async (req, res) => {
         }
     }else{
         res.status(404).send({success: false, message: `Plant with id: ${id} not found`})
+    }
+})
+
+router.get('/get/:id', verifyToken, async (req, res) => {
+    
+    const token = req.header('auth-token');
+    const user = jwt.decode(token);
+
+    const plant = await Plant.findOne({where: {
+        id: req.params.id
+    }})
+
+    if(plant){
+        return res.status(200).send({success: true, data: plant})
+    }else{
+        return res.status(404).send({success: false, message: `No plant with id ${id} found`})
+    }
+})
+
+router.get('/getall', verifyToken, async (req, res) => {
+    
+    const token = req.header('auth-token');
+    const user = jwt.decode(token);
+
+    const plants = await Plant.findAll({where: {
+        user_id: user.id
+    }})
+
+    if(plants){
+        return res.status(200).send({success: true, data: plants})
+    }else{
+        return res.status(404).send({success: false, message: `No plants with found`})
     }
 })
 

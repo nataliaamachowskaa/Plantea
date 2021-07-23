@@ -15,7 +15,11 @@ const User = sequelize.define("user",{
     user_type_id: {
         type: DataTypes.INTEGER,
         foreignKey: true
-    }
+    },
+    register_date: DataTypes.DATEONLY,
+    expire_date: DataTypes.DATE,
+    is_blocked: DataTypes.BOOLEAN,
+    reset_code: DataTypes.TEXT
 });
 
 User.belongsTo(UserType, {

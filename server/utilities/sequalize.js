@@ -8,13 +8,15 @@ const database = process.env.DB_DATABASE;
 const host = process.env.DB_HOST;
 const user = process.env.DB_USER;
 const pass = '';
+const port = process.env.DB_PORT;
 
 const sequalize = new Sequelize(database, user, pass, {
     host,
     dialect: 'mysql',
     define: {
         timestamps: false
-    }
+    },
+    port
 })
 
 module.exports = sequalize;

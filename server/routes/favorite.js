@@ -9,6 +9,7 @@ require('dotenv').config();
 const secretKey = process.env.JWT_SECRET_KEY;
 const router = express.Router();
 const db = require('../utilities/dbConnection');
+const checkDateIfExpired = require('../utilities/checkIfExpired');
 
 const Favorite = require('../models/Favorite');
 const User = require('../models/User');
@@ -19,6 +20,8 @@ router.post('/add/:id', verifyToken, async(req, res) => {
     const token = req.header('auth-token');
     const user = jwt.decode(token);
     const id = req.params.id;
+
+    if(checkDateIfExpired(user.expireDate)) return res.status(400).send({success: false, message: "Your account is expired. Buy subscription to continue"});
 
     const favoriteCheck = await Favorite.findOne({where: {plant_id: id}})
 

@@ -1,5 +1,9 @@
 # SERVER BACK END DOCUMENTATION
 
+`url` of back-end is `https://shrouded-fjord-55917.herokuapp.com/`.
+
+Use it to make requests
+
 ## Users wit admin permissions
 
 `email` and `password`
@@ -75,6 +79,19 @@ As the response you will receive the web token which you must store locally on t
 }
 ```
 
+To see user's details use path `/api/user/profile`
+
+### Resetting password
+
+#### Step 1
+To reset your password you should provide a request to `/api/user/sendcode` with `email` addres in body of the request. Server will send email message with code, which user has to enter in the next step. If the resut is a success you are allowed to go to the next step.
+
+#### Step 2
+In this step you should provide a request to `/api/user/entercode` with `email` and `code` variables in the body of the request (both should be string). Server will check if code matches another code sent to provided email address. If the result is a success you are allowed to go to the next step.
+
+#### Step 3
+In this step you should provide a request to `/api/user/resetpass` with `email`, `password` and `confirmPassword`. Server will check if specific user requested for resetting the password and will change it to new one which has been provided.
+
 ## GARDENS SECTION
 
 ### Displaying all gardens
@@ -132,7 +149,10 @@ may return:
     }
 ]
 ```
+### Displaying user's garden
 
+Path: `/api/garden/my`
+Use with `auth-token`
 
 ### Creating new garden
 
@@ -279,6 +299,8 @@ To display all plants which are in favorites you should use path `api/favorites/
 
 ## User's plants section.
 
+### Adding plant
+
 To add plant to garden you should use path `/api/user/plant/create` where you should provide `name`, `gardenId`, `plantId` fields in your request.
 
 example json file with request:
@@ -343,3 +365,11 @@ may return:
     }
 }
 ```
+
+### Displaying all user's plants
+
+`/api/user/plant/getall`
+
+### Displaying user's plant with provided id
+
+`/api/user/plant/get/:id` where `id` is user's plant id

@@ -42,6 +42,10 @@ CREATE TABLE users(
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     user_type_id INT NOT NULL,
+    register_date DATE,
+    expire_date DATE,
+    is_blocked BOOLEAN,
+    reset_code VARCHAR(10),
     PRIMARY KEY(id),
     FOREIGN KEY (user_type_id) REFERENCES user_types(id)
 );
@@ -90,14 +94,3 @@ VALUES
     ('Natalia Machowska', 'natalia.machowska@gmail.com', '$2a$10$MCBiyy6e6sean8lMRoBe7e1kMuYDRkviThHIvZBDbAJcWuszbrVY6', 1),
     ('Wojciech Kolarski', 'wojciech.kolarski@gmail.com', '$2a$10$MCBiyy6e6sean8lMRoBe7e1kMuYDRkviThHIvZBDbAJcWuszbrVY6', 1),
     ('Paulina Maszkowska', 'paulina.maszkowska@gmail.com', '$2a$10$MCBiyy6e6sean8lMRoBe7e1kMuYDRkviThHIvZBDbAJcWuszbrVY6', 1);
-
-INSERT INTO categories
-    (name)
-VALUES
-    ('Flowers'), ('')
-
-INSERT INTO plants
-    (name, latin_name, description, requirements, animal_safety_profile, care, watering, placement, category_id)
-VALUES
-    ('Sweet Briar Rose', 'Rosa rubiginosa', 'Known the common names sweet briar, sweetbriar rose, sweet brier or eglantine. It is a dense deciduous shrub 2–3 m high and across, with the stems bearing numerous hooked prickles. The foliage has a strong apple-like fragrance. In addition to its pink flowers, it is valued for its scent, and the hips that form after the flowers will persist well into the winter. The tea made from the hips of this rose is very popular in Europe and elsewhere, where it is considered a healthy way for people to get their daily dose of vitamin C and other nutrients. A cup of rose hip tea will provide the minimum daily adult requirement of vitamin C. During World War II the British relied on rose hips and hops as the sources for their vitamins A and C. It was a common British wartime expression to say that: “We are getting by on our hips and hops"', 'Ideally, roses should be grown in sunny and open locations, with good air circulation at the base of the plant, in rich and well-draining soil. Some roses, notably the old ramblers and the modern hybrid musks, can tolerate some shade in any zone and may even prefer shade in the hottest zones.', null, 'Apply a layer of compost under the shrub each spring, followed by a 2-inch layer of mulch to retain moisture and control weeds, keeping mulch a few inches away from the stems. Water plants during the summer if rainfall is less than 1 inch per week. Pruning techniques vary with the type of rose.', 'Roses require 1-2 inches of water a week to thrive. In dry climates, this water has to be supplied by the gardener, and although overhead watering was once discouraged, it is the logical choice. The water supplied by a gardener supplements rain, which falls from overhead. Overhead watering keeps the foliage and blooms clean, retards powdery mildew, and repels some pests.', 'Select a site with full sun and well-drained soil.', 1),
-    ()

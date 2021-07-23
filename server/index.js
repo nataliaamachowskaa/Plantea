@@ -3,12 +3,15 @@ const express = require('express');
 // Initiating mysql for handling mysql database.
 const mysql = require('mysql');
 
+const cors = require('cors');
+
 const jwt = require('jsonwebtoken');
 
 // Initialising dotenv module to manage server's configuration data, which can be found in the root directory in ".env" file
 require('dotenv').config();
 
 const app = express();
+app.use(cors());
 
 // Initialised routes
 const authRoutes = require('./routes/auth');
@@ -33,7 +36,7 @@ app.use('/api/user/plant', userPlantRoutes)
 
 // Initiating variables
 const PORT = process.env.PORT || 3001;
-
+const IP = process.env.IP
 
 
 app.get('/', (req, res) => {
@@ -41,7 +44,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/user/profile', verifyToken, (req, res) => {
-    res.send(jwt.decode("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDMsImVtYWlsIjoibHVrYXN6LmxvcGF0YTk2QGdtYWlsLmNvbSIsInVzZXJUeXBlIjoxLCJpYXQiOjE2MjYwMTIxMzF9.EBqAfoPk4u7-s-aZXaSoPGzlCPsiqgzrRx4VxSkGh28"));
+    res.send(jwt.decode(req.header('auth-token')));
 })
 
 
@@ -57,8 +60,8 @@ db.connect((err) => {
         return console.log("ERROR: " + err.sqlMessage);
     } else {
         console.log("Connected to database");    
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`)
+        app.listen(PORT, IP, () => {
+            console.log(`Server is running on ${IP}:${PORT}`)
         })
     }
 })
