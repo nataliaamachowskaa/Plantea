@@ -20,6 +20,7 @@ const categoryRoutes = require('./routes/category');
 const plantRoutes = require('./routes/plant');
 const favoriteRoutes = require('./routes/favorite');
 const userPlantRoutes = require('./routes/userPlants');
+const planRoutes = require('./routes/plan');
 
 // Middlewares
 const verifyToken = require('./routes/verifyToken');
@@ -30,7 +31,8 @@ app.use('/api/garden', gardenRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/plant', plantRoutes);
 app.use('/api/favorite', favoriteRoutes);
-app.use('/api/user/plant', userPlantRoutes)
+app.use('/api/user/plant', userPlantRoutes);
+app.use('/api/plan', planRoutes);
 
 
 

@@ -79,6 +79,17 @@ CREATE TABLE user_plants(
     FOREIGN KEY(garden_id) REFERENCES gardens(id)
 );
 
+CREATE TABLE plans(
+    id INT AUTO_INCREMENT NOT NULL,
+    user_plant_id INT,
+    user_id INT,
+    action enum('WATERING', 'FERTILIZATION', 'SPRAYING') NOT NULL DEFAULT 'WATERING',
+    date DATE,
+    PRIMARY KEY(id),
+    FOREIGN KEY(user_plant_id) REFERENCES user_plants(id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+
 INSERT INTO user_types (name, description)
 VALUES 
     ('Admin', 'Admin user type - can do everything'),

@@ -1,6 +1,6 @@
 # SERVER BACK END DOCUMENTATION
 
-`url` of back-end is `https://shrouded-fjord-55917.herokuapp.com/`.
+`url` of back-end is `https://nodejsclusters-39353-0.cloudclusters.net`.
 
 Use it to make requests
 
@@ -81,7 +81,7 @@ As the response you will receive the web token which you must store locally on t
 
 To see user's details use path `/api/user/profile`
 
-### Resetting password
+### Resetting password with method `POST`
 
 #### Step 1
 To reset your password you should provide a request to `/api/user/sendcode` with `email` addres in body of the request. Server will send email message with code, which user has to enter in the next step. If the resut is a success you are allowed to go to the next step.
@@ -373,3 +373,17 @@ may return:
 ### Displaying user's plant with provided id
 
 `/api/user/plant/get/:id` where `id` is user's plant id
+
+
+## Plans section 
+
+### Create plan
+
+To create plan for specific plant, you have to provide a `POST` request to path `/api/plan/create/:id` where `id` is user's plant id, with fields:
+
+`action` - accepts only values like: `WATERING`, `FERILIZATION` and `SPRAYING`,
+`date` - date in format `YYYY-MM-DD`
+
+### Displaying all user's plans
+
+Use method `GET` on path `/api/plan/show`
