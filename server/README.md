@@ -1,5 +1,7 @@
 # SERVER BACK END DOCUMENTATION
 
+![alt text](src/database.jpg)
+
 `url` of back-end is `https://nodejsclusters-39353-0.cloudclusters.net`.
 
 Use it to make requests
